@@ -1,0 +1,64 @@
+version: "3.8"
+
+services:
+  # Substation A
+  substation1:
+    build:
+      context: ./substation_service
+    container_name: substation1
+    ports:
+      - "8001:8000"
+    networks:
+      - gridnet
+
+  # Substation B
+  substation2:
+    build:
+      context: ./substation_service
+    container_name: substation2
+    ports:
+      - "8002:8000"
+    networks:
+      - gridnet
+
+  # Load Balancer
+  load_balancer:
+    build:
+      context: ./load_balancer
+    container_name: load_balancer
+    ports:
+      - "7000:7000"
+    depends_on:
+      - substation1
+      - substation2
+    networks:
+      - gridnet
+
+  # Prometheus
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - gridnet
+    depends_on:
+      - substation1
+      - substation2
+
+  # Grafana
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - gridnet
+    depends_on:
+      - prometheus
+
+networks:
+  gridnet:
+    driver: bridge
