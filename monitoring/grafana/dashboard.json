@@ -1,0 +1,33 @@
+{
+  "dashboard": {
+    "id": null,
+    "uid": "ev-load-dashboard",
+    "title": "EV Substation Load Monitor",
+    "timezone": "browser",
+    "panels": [
+      {
+        "type": "graph",
+        "title": "Live Substation Load",
+        "gridPos": { "x": 0, "y": 0, "w": 24, "h": 12 },
+        "targets": [
+          {
+            "expr": "substation_current_load",
+            "legendFormat": "{{instance}}",
+            "refId": "A"
+          }
+        ],
+        "datasource": "Prometheus",
+        "lines": true,
+        "linewidth": 2,
+        "fill": 1,
+        "tooltip": { "shared": true },
+        "xaxis": { "mode": "time", "show": true },
+        "yaxis": { "label": "Load", "show": true }
+      }
+    ],
+    "refresh": "5s",
+    "schemaVersion": 30,
+    "version": 1
+  },
+  "overwrite": true
+}
